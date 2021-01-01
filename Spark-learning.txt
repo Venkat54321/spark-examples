@@ -1,0 +1,6 @@
+the table is generally divided into two types:
+1)fact table :  The fact table generally records water, such as sales lists, etc., usually with the growth of time constantly expanding.... means large tables
+2)dimension table: Dimension tables (small tables) generally refer to fixed, less variable tables, such as contacts, items, etc., the general data is limited.
+
+
+
