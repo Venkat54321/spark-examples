@@ -4,3 +4,11 @@ the table is generally divided into two types:
 
 
 
+===============================================
+Broadcast hash join :
+--------------------------
+1) Table needs to be broadcast less than  spark.sql.autoBroadcastJoinThreshold the configured value,
+   default 10M (or add a broadcast join the hint)
+2) Base table can not be broadcast, such as the left outer join, only broadcast the right table.
+
+3) In broadcast hash join, copy of one of the join relations are being sent to all the worker nodes and it saves shuffling cost. This is useful when you are joining a large relation with a smaller one. It is also known as map-side join(associating worker nodes with mappers).
