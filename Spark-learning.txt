@@ -3,6 +3,13 @@ the table is generally divided into two types:
 2)dimension table: Dimension tables (small tables) generally refer to fixed, less variable tables, such as contacts, items, etc., the general data is limited.
 
 
+=============================================
+JOINS :
+-------------------------
+1) We did not specify that we wanted to do an “inner-join”, by default spark performs an inner-join if no join type is given.
+2)Either you should skip the join type or the column name should be wrapped into scala Seq if have a join type.
+
+
 
 ===============================================
 Broadcast hash join :
@@ -12,3 +19,12 @@ Broadcast hash join :
 2) Base table can not be broadcast, such as the left outer join, only broadcast the right table.
 
 3) In broadcast hash join, copy of one of the join relations are being sent to all the worker nodes and it saves shuffling cost. This is useful when you are joining a large relation with a smaller one. It is also known as map-side join(associating worker nodes with mappers).
+
+// Create the Execution Plan
+fact_table = fact_table.join(broadcast(dimension_table), // Here's the magic!
+                         fact_table.col("dimension_id") === dimension_table.col("id"))
+
+================================================
+Sort Merge Joins :
+--------------------------
+

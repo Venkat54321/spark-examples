@@ -25,7 +25,7 @@ object SimpleSparkExample extends App {
   locationDF.show(false)
 
   //inner join
-  peopleDF.join(locationDF, peopleDF("job") === locationDF("job"), "").show(false)
+  peopleDF.join(locationDF, peopleDF("job") === locationDF("job"), "inner").show(false)
 
 
 }
