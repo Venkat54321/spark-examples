@@ -1,7 +1,9 @@
 package files
 
 import org.apache.spark.sql.SparkSession
-import org.apache.spark.sql.functions.{col, substring_index}
+import org.apache.spark.sql.functions.{avg, col, desc}
+
+//https://www.learntospark.com/2020/11/spark-interview-question-coding-round.html
 
 object ReadFileAndCreateRDD extends App{
 
@@ -9,9 +11,30 @@ object ReadFileAndCreateRDD extends App{
             .appName("ReadFileApp")
             .master("local[1]").getOrCreate()
 
-  val moviesFile = spark.read.option("delimiter","::").csv("movies.dat")
-  val movieName = moviesFile.col("_c1")
-  val movieGenres = moviesFile.col("_c2")
-  val joinMovieWithGenres = movieName.+(movieGenres)
-  println(joinMovieWithGenres)
+  val ratingData = getRatingData("ratings.dat","::")
+  val movieData = getMoviesData("ratings.dat","::")
+
+  val finalData = ratingData.join(movieData,ratingData.col("movieId") === movieData.col("Id"),"inner")
+  finalData.select("movieId","name","averageRating")
+    .sort(desc("averageRating"))
+    .limit(100)
+    .coalesce(1)
+    .write
+    .format("com.databricks.spark.csv")
+    .option("delimiter","::")
+    .option("headers","true")
+    .mode("overwrite")
+    .save("newFile.csv")
+
+
+  def getRatingData(fileName:String,delimiter:String) ={
+    val ratingData = spark.read.option("delimiter",delimiter).csv(fileName)
+    ratingData.groupBy(col("_c1").as("movieId"))
+      .agg(avg("_c2").as("averageRating"))
+  }
+
+  def getMoviesData(fileName:String,delimiter:String)={
+    val rawMovieData = spark.read.option("delimiter","::").csv("movies.dat")
+    rawMovieData.withColumn("Id",col("_c0")).withColumn("name",col("_c1")).withColumn("generes",col("_c2"))
+  }
 }
