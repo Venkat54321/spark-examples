@@ -5,14 +5,14 @@ import org.apache.spark.sql.functions.{avg, col, desc}
 
 //https://www.learntospark.com/2020/11/spark-interview-question-coding-round.html
 
-object ReadFileAndCreateRDD extends App{
+object ReadFileAndGenerateCSV3 extends App{
 
   val spark = SparkSession.builder()
             .appName("ReadFileApp")
             .master("local[1]").getOrCreate()
 
-  val ratingData = getRatingData("ratings.dat","::")
-  val movieData = getMoviesData("ratings.dat","::")
+  val ratingData = getRatingData("movies-files/ratings.dat","::")
+  val movieData = getMoviesData("movies-files/movies.dat","::")
 
   val finalData = ratingData.join(movieData,ratingData.col("movieId") === movieData.col("Id"),"inner")
   finalData.select("movieId","name","averageRating")
@@ -34,7 +34,7 @@ object ReadFileAndCreateRDD extends App{
   }
 
   def getMoviesData(fileName:String,delimiter:String)={
-    val rawMovieData = spark.read.option("delimiter","::").csv("movies.dat")
+    val rawMovieData = spark.read.option("delimiter",delimiter).csv(fileName)
     rawMovieData.withColumn("Id",col("_c0")).withColumn("name",col("_c1")).withColumn("generes",col("_c2"))
   }
 }

@@ -8,4 +8,6 @@ libraryDependencies ++= Seq(
   "org.apache.spark" %% "spark-sql" % "3.0.0",
   "org.reactivemongo" %% "reactivemongo" % reactiveMongoVersion,
   "org.reactivemongo" %% "reactivemongo-bson" % "0.20.12",
+  // https://mvnrepository.com/artifact/org.apache.spark/spark-streaming
+  "org.apache.spark" %% "spark-streaming" % "3.0.0"
 )
