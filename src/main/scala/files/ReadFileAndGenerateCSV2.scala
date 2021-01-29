@@ -17,7 +17,7 @@ object ReadFileAndGenerateCSV2 extends App{
 
    val finalData = moviesAndGenres.groupBy(col("Genres")).agg(count("movieId").as("NumberOfMovies")).sort(asc("Genres"))
 
-   finalData.coalesce(5)
+   finalData.coalesce(1)
            .write
            .format("com.databricks.spark.csv")
            .option("delimiter","::")
