@@ -5,7 +5,7 @@ the table is generally divided into two types:
 
 =============================================
 JOINS :
--------------------------
+------
 1) We did not specify that we wanted to do an “inner-join”, by default spark performs an inner-join if no join type is given.
 2)Either you should skip the join type or the column name should be wrapped into scala Seq if have a join type.
 
@@ -13,7 +13,7 @@ JOINS :
 
 ===============================================
 Broadcast hash join :
---------------------------
+--------------------
 1) Table needs to be broadcast less than  spark.sql.autoBroadcastJoinThreshold the configured value,
    default 10M (or add a broadcast join the hint)
 2) Base table can not be broadcast, such as the left outer join, only broadcast the right table.
@@ -26,5 +26,25 @@ fact_table = fact_table.join(broadcast(dimension_table), // Here's the magic!
 
 ================================================
 Sort Merge Joins :
---------------------------
+------------------
+
+================================================
+Triggers :
+----------
+
+trigger create mirco-batch with specified time interval.
+===============================================
+Adaptive Query executions :
+---------------------------
+1) selecting joins strategy runtime - either broadcast join or sort merge join
+2) selecting no.of partitions - default 200
+3) data skew problem
+
+for this we need to globally enable - spar.sql.adaptive.enabled=true
+================================================
+
+Speculative execution in spark:
+-------------------------------
+to handle slow running tasks in spark.
+to enable spark.speculation= true
 
