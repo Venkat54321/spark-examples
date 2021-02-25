@@ -1,0 +1,43 @@
+file1.txt
+1 2 x 3 4 5
+6 x 7 8 9
+1 x 2 3 
+1 x 4 2
+
+file2.txt
+7 7 x 0
+1 2 x 3
+7 9
+8 0
+
+/tmp/data/file1.txt 
+/tmp/data/file2.txt
+/tmp/data/filen.txt
+
+file1.txt
+1 2 3 4 5
+6 7 8 9
+1 2 3 
+1 4 2
+
+file2.txt
+7 7 0
+1 2 3
+7 9
+8 0
+
+
+columnwise average
+
+part-00000
+--------------------------
+col1: (1+6+1+1+7+1+7+8)/8
+col2: (2+7+2+4+7+2+9+0)/8
+col3: (3+8+3+2+0+3)/6
+col4: (4+9)/2
+col5: 5/1
+
+
+1) many files
+2) many columns
+3) 

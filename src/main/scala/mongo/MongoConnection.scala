@@ -14,16 +14,17 @@ import ExecutionContext.Implicits.global
 object MongoConnection extends App {
 
   val document1 = BSONDocument(
-    "_id" -> "Venkat",
+    "_id" -> "Venkat1",
     "firstName" -> "Stephane",
     "lastName" -> "Godbillon",
     "age" -> 29)
 
-  val url = "mongodb://127.0.0.1:27017/?authSource=admin&readPreference=primary&ssl=false"
+ // val url = "mongodb://127.0.0.1:27017/?authSource=admin&readPreference=primary&ssl=false"
+ val url =   "mongodb://root:cnapp@127.0.0.1:27017/?authSource=admin"
   val driver: Future[MongoConnection] = AsyncDriver().connect(url)
 
-  //insertToMongo()
-  readFromMongo()
+  insertToMongo()
+  //readFromMongo()
 
   def readFromMongo(): Unit ={
     driver.onComplete {
