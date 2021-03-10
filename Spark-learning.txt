@@ -48,3 +48,23 @@ Speculative execution in spark:
 to handle slow running tasks in spark.
 to enable spark.speculation= true
 
+===============================================
+Spark memory management
+
+https://www.linkedin.com/pulse/apache-spark-memory-management-deep-dive-deepak-rajak/
+Reserve memory : if you don’t give Spark executor at least 1.5 * Reserved Memory = 450MB heap,
+                 it will fail with “please use larger heap size” error message.
+
+User memory : In Spark, the size of this memory pool can be calculated as (“Java Heap” – “Reserved Memory”) * (1.0 – spark.memory.fraction),
+ which is by default equal to (“Java Heap” – 300MB) * 0.40. For example, with 4GB heap you would have 1518 MB of User Memory.
+ And again, this is the User Memory and its completely up to you what would be stored in this RAM and how, Spark makes completely
+ no accounting on what you do there and whether you respect this boundary or not.
+ Not respecting this boundary in your code might cause OOM error.
+
+================================================
+
+repartition vs coalesce :
+
+https://blog.knoldus.com/apache-spark-repartitioning-v-s-coalesce/
+
+================================================
