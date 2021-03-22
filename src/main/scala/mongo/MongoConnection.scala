@@ -20,11 +20,11 @@ object MongoConnection extends App {
     "age" -> 29)
 
  // val url = "mongodb://127.0.0.1:27017/?authSource=admin&readPreference=primary&ssl=false"
- val url =   "mongodb://root:cnapp@127.0.0.1:27017/?authSource=admin"
+ val url =   "mongodb://127.0.0.1:27017/?authSource=admin"
   val driver: Future[MongoConnection] = AsyncDriver().connect(url)
 
-  insertToMongo()
-  //readFromMongo()
+ // insertToMongo()
+  readFromMongo()
 
   def readFromMongo(): Unit ={
     driver.onComplete {
@@ -78,7 +78,7 @@ object MongoConnection extends App {
       map(_.collection("test"))
 
   def read(coll: BSONCollection):Future[Option[BSONDocument]]= {
-    val doc: BSONDocument = BSONDocument("_id" -> "1")
+    val doc: BSONDocument = BSONDocument("age" -> 29)
     coll.find(doc).one[BSONDocument]
   }
 }
