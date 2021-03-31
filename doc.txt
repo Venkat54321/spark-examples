@@ -1,0 +1,105 @@
+sbt "server / runMain com.colortokens.cnapp.server.infrastructure.App"
+
+vpn
+Remote Gateway - 45.112.53.2
+Port Number - 10443
+
+kubectl delete -f spark.yaml
+kubectl create -f spark.yaml
+
+sudo docker run --name mongo -p 27017:27017 -d mongo
+
+docker run -p 27017:27017 -e MONGO_INITDB_ROOT_USERNAME=cnapp MONGO_INITDB_ROOT_PASSWORD=cnapp mongo
+
+
+sudo docker run --name mongo -e MONGO_INITDB_ROOT_USERNAME=cnapp MONGO_INITDB_ROOT_PASSWORD=cnapp -p 27017:27017 -d mongo
+
+kubectl port-forward svc/mongodb-headless 27017
+
+kubectl port-forward svc/mongodb-sharded 27017:27017
+
+
+colormaster:VV4kdck6pQGYWW
+
+mongodump --forceTableScan --authenticationDatabase admin -u colormaster -p VV4kdck6pQGYWW -d cloud_vishnu -o cloud_vishnu_mydb_bkp
+
+mongorestore --port=27017 --username=root -p cnapp --authenticationDatabase=admin cloud_vishnu_mydb_bkp
+
+mongorestore --port=27017 --authenticationDatabase=admin cloud_vishnu_mydb_bkp
+
+mongorestore --host=mongodb1.example.net --port=3017 --username=user  --authenticationDatabase=admin /opt/backup/mongodump-2013-10-24
+
+
+
+kubectl port-forward svc/ct-mongodb-mongodb-replicaset 27017:27017 --namespace mongodb
+
+kubectl port-forward svc/cnapp-elasticsearch-master 9200:9200
+
+kubectl port-forward cnapp-spark-driver 4040:4040
+
+newman run cnapp_controller.postman_collection.json -n 10000 --delay-request 7000
+
+kubectl port-forward svc/cnapp-controller 8085:8085
+
+helm install mongodb mongodb/ --values=mongodb/cnapp/cnapp-ana2.yaml
+
+helm install mongodb-sharded ./mongodb-sharded/ --values=mongodb-sharded/cnapp/cnapp-ana.yaml
+
+helm install cnapp-controller ./cnapp-controller/ --values=cnapp-controller/cnapp/cnapp-ana2.yaml
+
+helm install kafka ./kafka/ --values=kafka/cnapp/cnapp-ana.yaml
+
+helm install my-nginx ./nginx-ingress/ --values=nginx-ingress/cnapp/cnapp-ana.yaml --namespace anirudh1
+
+helm delete mongodb
+
+helm dependency update
+
+helm install cnapp-elasticsearch ./elasticsearch/ --values=elasticsearch/cnapp/cnapp-ana.yaml --namespace venkat
+
+mongodb://root:cnapp@127.0.0.1:27017/?authSource=admin&readPreference=primary&ssl=false
+
+
+==================================================================================================================
+    
+1) tmux new-session -sSession1
+
+
+type command or run script like : top,htop
+close the terminal 
+
+2) open new terminal and attach session tmux
+
+tmux attach-session -t Session1
+
+3) 
+
+newman run cnapp_controller-5.postman_collection.json -n 100000 --delay-request 7000
+newman run cnapp-controller-3.postman_collection.json -n 100000 --delay-request 7000
+newman run cnapp-controller-1.postman_collection.json -n 100000 --delay-request 7000
+
+==================================================================================================================
+
+# HELP kube_ct_custom_info kube_ct_custom_info
+# TYPE kube_ct_custom_info gauge
+kube_ct_custom_info{​​​​​​​tenantId="scalingTenant1", clusterId="scalingCluster1"}​​​​​​​ 0
+# HELP kube_ct_custom_updated kube_ct_custom_updated
+# TYPE kube_ct_custom_updated gauge
+kube_ct_custom_updated{​​​​​​​tenantId="scalingTenant1", clusterId="scalingCluster1"}​​​​​​​ 1614163124
+
+=============================================================================
+
+changes(ipsec_up{CN = "'C=IN, ST=KARNATAKA, L=BANGALORE, O=COLOR TOKENS, CN=arawin7001@d3270d33b5c54b2547d6a645d2dc5cc'"}[15m]) >= 5
+
+
+
+ipsec_up{CN = "'C=IN, ST=KARNATAKA, L=BANGALORE, O=COLOR TOKENS, CN=arawin7001@d3270d33b5c54b2547d6a645d2dc5cc'"}
+
+ipsec_up{CN = "'C=IN, ST=KARNATAKA, L=BANGALORE, O=COLOR TOKENS,CN=ctdemo1sanity(none)",gateway="ctbridge.qasaml.colortokens.com",instance="54.163.12.192:9536'"}
+
+changes(ipsec_tunnel_up_time{CN = "'C=IN, ST=KARNATAKA, L=BANGALORE, O=COLOR TOKENS, CN=arawin7001@d3270d33b5c54b2547d6a645d2dc5cc'"}[1m]) >= 0
+
+
+
+changes(ipsec_tunnel_up_time{}
+
