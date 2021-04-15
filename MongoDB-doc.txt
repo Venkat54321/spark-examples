@@ -1,0 +1,404 @@
+Where does MongoDB stand in CAP theorem?
+MongoDB is strongly consistent by default - if you do a write and then do a read, assuming the write was successful you will always be able to read the result of the write you just read. This is because MongoDB is a single-master system and all reads go to the primary by default. If you optionally enable reading from the secondaries then MongoDB becomes eventually consistent where it's possible to read out-of-date results.
+
+MongoDB also gets high-availability through automatic failover in replica sets:
+
+MongoDB is however not highly available because if the primary goes down, it takes a while for the arbiter or the secondary nodes to elect a new primary.
+
+Therefore MongoDB falls in CP of the CAP theorem
+
+Deployment styles
+MongoDB can be deployed in 3 different ways. We will be discussing mongoDB deployment styles in Kubernetes world
+
+Standalone
+The standalone architecture installs a deployment (or statefulset) with one MongoDB server (it cannot be scaled):
+
+
+                ┌────────────────┐
+                │    MongoDB     │
+                |      svc       │
+                └───────┬────────┘
+                        │
+                        ▼
+                  ┌──────────┐
+                  │  MongoDB │
+                  │  Server  │
+                  │   Pod    │
+                  └──────────┘
+
+
+Replicaset
+Replicaset deployment model has a maximum of 1 primary node and a minimum of 2 secondary nodes.
+
+Writes would always happen on the primary and replicated to other secondary nodes.
+
+When client writes to primary, it is also written to opLog, from which it is replicated to secondary nodes.
+
+
+
+
+Reads can happen from both primary and secondary nodes.
+
+
+Replication to secondary nodes can happen from primary or via other secondary nodes as well.
+
+
+
+
+Failover
+
+When a primary node goes down, the secondary nodes elect a new primary. This election can be optionally done via an arbiter node as well. The role of arbiter node is only to elect a primary node in case of a failure.
+
+
+
+
+
+
+Sharding
+Sharding deployment has 3 major components
+
+Mongos
+
+Mongos is a stateless application which provide the interface between the client applications and the sharded cluster.
+
+Config Servers
+
+Config Servers can be deployed as a standalone or a replicaset which holds metadata information about the shard cluster
+
+Shard
+
+This is where actual data resides. Each shard holds a range of data. If data load increases, we can add more shards thereby making it horizontally scalable. Each shard can be a standalone or a replicaset deployment.
+
+
+
+
+OpLog
+MongoDB, similar to other databases operates using a transaction log internally. In MongoDB’s case, it is called oplog.
+
+We have a oplog collection on the primary and the same oplog data is copied to the secondary.
+
+mongodb-mongodb-sharded-shard-0:PRIMARY> use local
+switched to db local
+mongodb-mongodb-sharded-shard-0:PRIMARY> db.oplog.rs.findOne()
+{
+"op" : "n",
+"ns" : "",
+"o" : {
+"msg" : "initiating set"
+},
+"ts" : Timestamp(1603784073, 1),
+"wall" : ISODate("2020-10-27T07:34:33.737Z"),
+"v" : NumberLong(2)
+}
+mongodb-mongodb-sharded-shard-0:PRIMARY>
+
+oplog data can be used for data replays in case certain operations need to be rolled back.
+
+Backup & Restore
+
+
+
+Migration from Replicaset to Sharded cluster
+As the data increases, we might need to scale the mongodb and a mere replicaset cannot scale horizontally. Having a sharded mongodb cluster would enable horizontal scaling. In order to do this, we might also need to migrate the data from replicaset to sharded cluster. The steps are shown below
+
+Take backup of the replicaset data
+
+mongodump.exe "mongodb://root:cnapp@10.30.72.32:27017/?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&ssl=false" --authenticationDatabase admin -u root -p cnapp -d abcd -o mydb_bkp
+
+2.  Create a sharded cluster using helm
+
+helm install mongodb-sharded bitnami/mongodb-sharded  --namespace mongo --set mongodbRootPassword="cnapp",global.storageClass="filestorage",shards=2,configsvr.replicas=3,shardsvr.dataNode.replicas=3,mongos.replicas=2,configsvr.persistence.size=1Gi,shardsvr.persistence.size=1Gi,configsvr.external.rootPassword="cnapp",replicaSetKey="cnapp12345"
+
+3. Enable sharding on the database
+
+sh.enableSharding("cnapp")
+
+4. Remove all documents from the collection on the sharded database
+
+db.configmap.remove({})
+db.deployment.remove({})
+db.endpoint.remove({})
+db.flow.remove({})
+db.hpa.remove({})
+db.namespace.remove({})
+db.node.remove({})
+db.pod.remove({})
+db.pv.remove({})
+db.pvc.remove({})
+db.replicaset.remove({})
+db.secret.remove({})
+db.service.remove({})
+
+db.configmap.ensureIndex({_id: "hashed"})
+db.deployment.ensureIndex({_id: "hashed"})
+db.endpoint.ensureIndex({_id: "hashed"})
+db.flow.ensureIndex({_id: "hashed"})
+db.hpa.ensureIndex({_id: "hashed"})
+db.namespace.ensureIndex({_id: "hashed"})
+db.node.ensureIndex({_id: "hashed"})
+db.pod.ensureIndex({_id: "hashed"})
+db.pv.ensureIndex({_id: "hashed"})
+db.pvc.ensureIndex({_id: "hashed"})
+db.replicaset.ensureIndex({_id: "hashed"})
+db.secret.ensureIndex({_id: "hashed"})
+db.service.ensureIndex({_id: "hashed"})
+
+sh.shardCollection("cnapp.configmap",{"_id": "hashed"})
+sh.shardCollection("cnapp.deployment",{"_id": "hashed"})
+sh.shardCollection("cnapp.endpoint",{"_id": "hashed"})
+sh.shardCollection("cnapp.flow",{"_id": "hashed"})
+sh.shardCollection("cnapp.hpa",{"_id": "hashed"})
+sh.shardCollection("cnapp.namespace",{"_id": "hashed"})
+sh.shardCollection("cnapp.node",{"_id": "hashed"})
+sh.shardCollection("cnapp.pod",{"_id": "hashed"})
+sh.shardCollection("cnapp.pv",{"_id": "hashed"})
+sh.shardCollection("cnapp.pvc",{"_id": "hashed"})
+sh.shardCollection("cnapp.replicaset",{"_id": "hashed"})
+sh.shardCollection("cnapp.secret",{"_id": "hashed"})
+sh.shardCollection("cnapp.service",{"_id": "hashed"})
+
+5. Create index on the collection which on which sharding needs to be done
+
+db.configmap.ensureIndex({_id: "hashed"})
+db.deployment.ensureIndex({_id: "hashed"})
+db.endpoint.ensureIndex({_id: "hashed"})
+db.flow.ensureIndex({_id: "hashed"})
+db.hpa.ensureIndex({_id: "hashed"})
+db.namespace.ensureIndex({_id: "hashed"})
+db.node.ensureIndex({_id: "hashed"})
+db.pod.ensureIndex({_id: "hashed"})
+db.pv.ensureIndex({_id: "hashed"})
+db.pvc.ensureIndex({_id: "hashed"})
+db.replicaset.ensureIndex({_id: "hashed"})
+db.secret.ensureIndex({_id: "hashed"})
+db.service.ensureIndex({_id: "hashed"})
+
+6. Shard the collection
+
+sh.shardCollection("cnapp.configmap",{"_id": "hashed"})
+sh.shardCollection("cnapp.deployment",{"_id": "hashed"})
+sh.shardCollection("cnapp.endpoint",{"_id": "hashed"})
+sh.shardCollection("cnapp.flow",{"_id": "hashed"})
+sh.shardCollection("cnapp.hpa",{"_id": "hashed"})
+sh.shardCollection("cnapp.namespace",{"_id": "hashed"})
+sh.shardCollection("cnapp.node",{"_id": "hashed"})
+sh.shardCollection("cnapp.pod",{"_id": "hashed"})
+sh.shardCollection("cnapp.pv",{"_id": "hashed"})
+sh.shardCollection("cnapp.pvc",{"_id": "hashed"})
+sh.shardCollection("cnapp.replicaset",{"_id": "hashed"})
+sh.shardCollection("cnapp.secret",{"_id": "hashed"})
+sh.shardCollection("cnapp.service",{"_id": "hashed"})
+
+7. Restore the backed up data from the replicaset to the sharded cluster
+
+mongorestore.exe "mongodb://root:cnapp@10.30.72.32:27017/?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&ssl=false" --authenticationDatabase admin -u root -p cnapp mydb_bkp
+
+Appendix
+The following demo can be used to deploy a sharded mongodb via helm on a kubernetes cluster
+
+helm install mongodb bitnami/mongodb-sharded  --set mongodbRootPassword="cnapp",global.storageClass="sc",shards=2,configsvr.replicas=3,shardsvr.dataNode.replicas=2,mongos.replicas=2
+
+kubectl run --namespace default mongodb-mongodb-sharded-client --rm --tty -i --restart='Never' --image docker.io/bitnami/mongodb-sharded:4.4.1-debian-10-r12 --command -- mongo admin --host mongodb-mongodb-sharded -u root -p cnapp
+
+Some useful commands
+
+use shardedDb
+sh.enableSharding("shardedDb")
+sh.shardCollection("shardedDb.cnapp",{"_id": "hashed"})
+db.cnapp.getShardDistribution()
+db.cnapp.insert({"name": "Anirudh", "location": "bangalore"})
+
+
+
+Sharding information for collections
+Collection
+
+Is sharding required?
+
+field on which indexing needs to be done for sharding
+
+Any other comments
+
+configmap
+
+
+
+
+
+
+
+deployment
+
+
+
+
+
+
+
+endpoint
+
+
+
+
+
+
+
+flow
+
+
+
+
+
+
+
+hpa
+
+
+
+
+
+
+
+namespace
+
+
+
+
+
+
+
+node
+
+
+
+
+
+
+
+pod
+
+
+
+
+
+
+
+pv
+
+
+
+
+
+
+
+pvc
+
+
+
+
+
+
+
+replicaset
+
+
+
+
+
+
+
+secret
+
+
+
+
+
+
+
+service
+
+
+
+
+
+
+
+Queries
+Query/Observations
+
+Raised By
+
+Assigned to
+
+Comments
+
+Query/Observations
+
+Raised By
+
+Assigned to
+
+Comments
+
+How opLog works?
+
+Venkat
+
+Anirudh
+
+Added oplog section
+
+How does writeconcern work?
+
+Rahul
+
+Anirudh
+
+See https://docs.mongodb.com/manual/reference/write-concern/
+
+How does rebalancing happen in sharding?
+
+Rahul
+
+Anirudh
+
+When new shards are added, rebalancing happens automatically for sharded collections.
+
+Is synchronization pull/push based? What are the failure modes?
+
+Rahul
+
+Anirudh
+
+To replicate data, a secondary applies operations from the primary’s oplog to its own data set in an asynchronous process(so its a pull not push). Secondary nodes tail oplog, apply those updates with applyOps command
+
+How to do scaling down in mongoDb
+
+Vishnu
+
+Anirudh
+
+Steps mentioned in this page
+https://docs.mongodb.com/manual/tutorial/remove-shards-from-cluster/
+
+How to do data migration from replicaset to MongoDB
+
+Vishnu
+
+Anirudh
+
+Added section Migration from Replicaset to Sharded cluster
+
+
+
+New shards not being added to mongodb via helm
+
+Anirudh
+
+Anirudh
+
+It is working fine now. Try helm upgrade
+
+How to take periodic backups and restore in MongoDB
+
+Anirudh
