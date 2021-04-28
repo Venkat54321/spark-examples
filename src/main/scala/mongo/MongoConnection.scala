@@ -20,11 +20,11 @@ object MongoConnection extends App {
     "age" -> 29)
 
  // val url = "mongodb://127.0.0.1:27017/?authSource=admin&readPreference=primary&ssl=false"
- val url =   "mongodb://127.0.0.1:27017/?authSource=admin"
+ val url =   "mongodb://colormaster:VV4kdck6pQGYWW@localhost:27017/cloud_vishnu?authSource=admin"
   val driver: Future[MongoConnection] = AsyncDriver().connect(url)
 
- // insertToMongo()
-  readFromMongo()
+  insertToMongo()
+ // readFromMongo()
 
   def readFromMongo(): Unit ={
     driver.onComplete {

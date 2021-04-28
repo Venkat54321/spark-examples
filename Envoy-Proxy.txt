@@ -1,0 +1,28 @@
+1) https://levelup.gitconnected.com/scaling-microservices-with-grpc-and-envoy-72a64fc5bbb6
+
+* gRPC helps reduce network latency.it works on top of HTTP 2
+* Advantages of HTTP 2 over HTTP 1.1 :
+  a) Multiplexing requests using HTTP 2
+  b) Packet Transfer from Client to Server
+* gRPC advantages:
+  -Binary protocol (HTTP/2)
+  -Multiplexing many requests on one connection (HTTP/2)
+  -Header compression (HTTP/2)
+  -Strongly typed service and message definition (Protobuf)
+  -Idiomatic client/server library implementations in many languages
+
+
+
+2) https://medium.com/swlh/scaling-microservices-with-grpc-and-envoy-proxy-part-2-148f589b2a83#:~:text=your%20communication%20protocol.-,Envoy%20Proxy%20is%20an%20L7%20proxy%20and%20communication%20bus%20designed,quickly%20leverage%20via%20Listener%20configuration
+
+* Load-balancing can be done either by the client (Client-side load balancing) like Netflix Ribbon or
+ you could have a dedicated server which load-balances the requests (Server/ Proxy load balancing)
+ like Nginx, HAProxy, Consul, DNS and Envoy Proxy.
+
+* The Envoy Proxy configuration primarily consists of listeners, filters and clusters.
+
+* A listener is a named network location (e.g., port, Unix domain socket, etc.)
+  that tells Envoy the network location on which it should listen and can be connected to by downstream clients.
+
+* A set of filters provided tell Envoy how it should process the messages it hears. Envoy supports Listener filters,
+  Network (L3/L4) filters and HTTP filters.
