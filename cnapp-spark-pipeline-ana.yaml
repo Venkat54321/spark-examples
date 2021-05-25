@@ -13,6 +13,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+# kubectl create -f spark.yaml
+# kubectl delete -f spark.yaml
+#
 
 apiVersion: sparkoperator.k8s.io/v1beta2
 kind: SparkApplication
