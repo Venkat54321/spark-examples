@@ -1,0 +1,3 @@
+ The data structure type is very likely a B-Tree.
+ While the advantages of the B-Tree are numerous, the main advantage for our purposes is that it is sortable.
+

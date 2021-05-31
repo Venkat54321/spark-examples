@@ -1,0 +1,24 @@
+https://www.educative.io/courses/grokking-the-system-design-interview/m2yDVZnQ8lG
+======================
+Instagram also enables its users to share through many other social networking platforms, such as Facebook, Twitter, Flickr, and Tumblr.
+We plan to design a simpler version of Instagram for this design problem, where a user can share photos and follow other users.
+The ‘News Feed’ for each user will consist of top photos of all the people the user follows.
+
+
+========================================================================================
+DATABASE DESIGN
+========================================================================================
+We need to store data about users, their uploaded photos, and the people they follow.
+The Photo table will store all data related to a photo; we need to have an index on (PhotoID, CreationDate) since we need to fetch recent photos first.
+
+
+==================================
+
+Cassandra or key-value stores, in general, always maintain a certain number of replicas to offer reliability.
+Also, in such data stores, deletes don’t get applied instantly; data is retained for certain days (to support undeleting) before getting removed from the system permanently.
+
+===========================
+
+If only one instance of a service is required to run at any point, we can run a redundant secondary copy of the service that is not serving any traffic, but it can take control after the failover when the primary has a problem.
+
+=============================
