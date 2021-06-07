@@ -3,7 +3,7 @@ package problems.binarytree;
 public class BinaryTreeInorderTraversal {
 
     public static void main(String[] args) {
-        TreeNode root = new TreeNode().create();
+        TreeNode root = new TreeNode().createBST();
         System.out.println("Pre-order");
         preOrder(root);
        /* System.out.println("");

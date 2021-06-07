@@ -58,4 +58,37 @@ public class TreeNode {
 
         return one;
     }
+
+    public TreeNode createBST(){
+
+        TreeNode tweenty = new TreeNode(20);
+        TreeNode ten = new TreeNode(10);
+        TreeNode thirty = new TreeNode(30);
+
+        TreeNode five = new TreeNode(5);
+        TreeNode twelve = new TreeNode(12);
+
+        TreeNode tweentyFive = new TreeNode(25);
+        TreeNode thirdFive = new TreeNode(35);
+
+        TreeNode eleven = new TreeNode(11);
+        TreeNode tweentySix = new TreeNode(26);
+
+
+        tweenty.left = ten;
+        tweenty.right = thirty;
+
+        ten.left = five;
+        ten.right = twelve;
+
+        twelve.left = eleven;
+        thirty.left = tweentyFive;
+        thirty.right = thirdFive;
+
+        tweentyFive.right = tweentySix;
+
+        return tweenty;
+
+
+    }
 }
