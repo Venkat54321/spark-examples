@@ -74,6 +74,8 @@ public class TreeNode {
         TreeNode eleven = new TreeNode(11);
         TreeNode tweentySix = new TreeNode(26);
 
+        TreeNode tweentyFour = new TreeNode(24);
+
 
         tweenty.left = ten;
         tweenty.right = thirty;
@@ -81,11 +83,14 @@ public class TreeNode {
         ten.left = five;
         ten.right = twelve;
 
-        twelve.left = eleven;
         thirty.left = tweentyFive;
         thirty.right = thirdFive;
 
+        twelve.left = eleven;
         tweentyFive.right = tweentySix;
+
+        tweentySix.left = tweentyFour;
+
 
         return tweenty;
 
