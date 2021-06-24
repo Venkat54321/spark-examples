@@ -1,0 +1,115 @@
+Java Round 1:
+------------------
+How many objects are created ?
+
+
+String s = str.append(char[] charList)
+
+String a = “abc”
+String b = “abc”
+String c = new String(“abc”);
+
+Mutable String : StringBuilder Vs StringBuffer
+
+public interface CharSequence {
+	char charAt(int index);
+	   int length();
+}
+
+Interface MySB {
+
+String append(String str) {}
+
+String  append(CharSequence s) {}
+}
+
+Class MyStringBuilder implements  MySB{
+
+String append(String str) {}
+
+String  append(CharSequence s) {
+
+String str = new String
+
+
+
+
+
+}
+
+
+}
+
+How do you find all pairs of an integer array whose sum is equal to a given number?
+
+{5,2,3,6,1,
+,7,2} ,sum = 7
+(5,2) (6,1)
+main(){
+
+Int[] array = {5,2,3,6,1,2,7,2};
+Set<Interger> set = new HashSet<Integer>();
+for(int val : array){
+ set.add(val)
+}
+
+for(int val:array){
+  Int diff = sum - val;
+  if(set.contains(diff)){
+    sout(“pairs are : ” + val +  “ “ + diff)
+}
+
+}
+
+Marker interface ,
+
+
+
+Translation  implement Trans
+
+Batch  implement Trans
+
+Trans s = ()
+if(s.){
+ /=====
+}{
+ //====
+}
+
+Exception handling :
+Collections
+	HashMap
+           LinkedList
+          LinkedHashMap
+MultiThreading
+
+DeadLock?
+
+	Emp,
+           Dep
+
+       Emp - > dep
+       Dep -> emp
+
+array.steam()
+
+Employee(id,name,sal,depart)
+selecting top salary employee for each department ?
+
+Design Patterns
+
+Class DBConnector {
+   Private static DBConnector conn;
+
+Public static DBConnector getInstance(){
+
+  if( conn == null){
+
+       Conn = new DBConnector();
+
+  }
+Return conn;
+
+}
+
+

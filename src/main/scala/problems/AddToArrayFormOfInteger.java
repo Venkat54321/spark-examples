@@ -1,6 +1,5 @@
 package problems;
 
-import scala.Char;
 
 import java.util.ArrayList;
 import java.util.Arrays;

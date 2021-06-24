@@ -6,6 +6,7 @@ public class SquareRoot {
 
         int value = 15;
         System.out.println(findSquareRoot(value));
+        System.out.println(Math.sqrt(15));
 
     }
 
